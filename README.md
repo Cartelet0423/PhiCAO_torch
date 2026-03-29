@@ -79,16 +79,42 @@ We identified that **Equation (10)** is likely incorrect when compared to the lo
 - **Implementation Note**: This repository uses the **Implemented Version** shown below, which is used in `src/phicao.py`. 
 
 ---
-- **Original in Paper**:
+## Implementation Details: Phase Correction Formula
 
-$$ D ^ {\prime} \left(k _ {x}, k _ {y}, k _ {z}, \psi , \alpha\right) = \left\{ \begin{array}{c c} \frac {D \left(k _ {x} , k _ {y} , k _ {z}\right)}{A \left(k _ {x} , k _ {y} , k _ {z}\right) \mathrm {e} ^ {\mathrm {i} \varnothing^ {\prime} \left(k _ {x} , k _ {y} , k _ {z} , \psi , \alpha\right)} + w ^ {2}}, & \left(k _ {x} < k _ {x m a x}, k _ {y} < k _ {y m a x}, k _ {z} < k _ {z m a x}\right) \\ 0, & \left(k _ {x} \geq k _ {x m a x}, k _ {y} \geq k _ {y m a x}, k _ {z} \geq k _ {z m a x}\right) \end{array} \right. $$
+The core implementation in this repository follows a modified version of the original paper's formula to ensure numerical stability.
+
+### Mathematical Formulations
+
+- **Original in Paper**:
+  
+$$
+D^{\prime}(k_x, k_y, k_z, \psi, \alpha) = 
+\begin{cases} 
+\frac{D(k_x, k_y, k_z)}{A(k_x, k_y, k_z) \mathrm{e}^{\mathrm{i} \varnothing^{\prime}(k_x, k_y, k_z, \psi, \alpha)} + w^2} & (k_x < k_{max}, k_y < k_{max}, k_z < k_{max}) \\ 
+0 & (k_x \geq k_{max}, k_y \geq k_{max}, k_z \geq k_{max}) 
+\end{cases}
+$$
 
 - **Corrected Version (Derived from Eq 19)**:
-  $$ D ^ {\prime} \left(k _ {x}, k _ {y}, k _ {z}, \psi , \alpha\right) = \left\{ \begin{array}{c c} \frac {A \left(k _ {x} , k _ {y} , k _ {z}\right) D \left(k _ {x} , k _ {y} , k _ {z}\right)}{A \left(k _ {x} , k _ {y} , k _ {z}\right) \mathrm {e} ^ {\mathrm {i} \varnothing^ {\prime} \left(k _ {x} , k _ {y} , k _ {z} , \psi , \alpha\right)} + w ^ {2}}, & \left(k _ {x} < k _ {x m a x}, k _ {y} < k _ {y m a x}, k _ {z} < k _ {z m a x}\right) \\ 0, & \left(k _ {x} \geq k _ {x m a x}, k _ {y} \geq k _ {y m a x}, k _ {z} \geq k _ {z m a x}\right) \end{array} \right. $$
+  
+$$
+D^{\prime}(k_x, k_y, k_z, \psi, \alpha) = 
+\begin{cases} 
+\frac{A(k_x, k_y, k_z) D(k_x, k_y, k_z)}{A(k_x, k_y, k_z) \mathrm{e}^{\mathrm{i} \varnothing^{\prime}(k_x, k_y, k_z, \psi, \alpha)} + w^2} & (k_x < k_{max}, k_y < k_{max}, k_z < k_{max}) \\ 
+0 & (k_x \geq k_{max}, k_y \geq k_{max}, k_z \geq k_{max}) 
+\end{cases}
+$$
 
 - **Implemented Version (Used in this repository)**:
-  $$ D ^ {\prime} \left(k _ {x}, k _ {y}, k _ {z}, \psi , \alpha\right) = \left\{ \begin{array}{c c} \frac { D \left(k _ {x} , k _ {y} , k _ {z}\right)}{\mathrm {e} ^ {\mathrm {i} \varnothing^ {\prime} \left(k _ {x} , k _ {y} , k _ {z} , \psi , \alpha\right)} + w ^ {2}}, & \left(k _ {x} < k _ {x m a x}, k _ {y} < k _ {y m a x}, k _ {z} < k _ {z m a x}\right) \\ 0, & \left(k _ {x} \geq k _ {x m a x}, k _ {y} \geq k _ {y m a x}, k _ {z} \geq k _ {z m a x}\right) \end{array} \right. $$
-*(This version is adopted in `src/phicao.py` for its stability and alignment with the optimization results)*
+  > **Note**: This version is adopted in `src/phicao.py` for its stability and alignment with the optimization results.
+
+$$
+D^{\prime}(k_x, k_y, k_z, \psi, \alpha) = 
+\begin{cases} 
+\frac{D(k_x, k_y, k_z)}{\mathrm{e}^{\mathrm{i} \varnothing^{\prime}(k_x, k_y, k_z, \psi, \alpha)} + w^2} & (k_x < k_{max}, k_y < k_{max}, k_z < k_{max}) \\ 
+0 & (k_x \geq k_{max}, k_y \geq k_{max}, k_z \geq k_{max}) 
+\end{cases}
+$$
 
 ## License
 This project is for research purposes. Please refer to the original paper for licensing regarding the $\phi$ CAO algorithm itself.
